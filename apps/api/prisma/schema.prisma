@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "./generated"
 }
 
 datasource db {
@@ -22,9 +22,10 @@ model User {
   avatar    String?
   password  String
   createdAt DateTime  @default(now())
-  updatedAt DateTime
+  updatedAt DateTime? @updatedAt
   posts     Post[]
   comments  Comment[]
+  Like      Like[]
 }
 
 model Post {
@@ -38,15 +39,16 @@ model Post {
   author    User      @relation(fields: [authorId], references: [id])
   comments  Comment[]
   tags      Tag[]     @relation("PostTags")
+  Like      Like[]
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   content   String
-  post      Post     @relation(fields: [postId], references: [id])
-  author    User     @relation(fields: [authorId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime
+  post      Post      @relation(fields: [postId], references: [id])
+  author    User      @relation(fields: [authorId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
   postId    Int
   authorId  Int
 }
@@ -55,4 +57,13 @@ model Tag {
   id    Int    @id @default(autoincrement())
   name  String
   posts Post[] @relation("PostTags")
+}
+
+model Like {
+  id     Int @id @default(autoincrement())
+  postId Int
+  userId Int
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
 }
