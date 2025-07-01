@@ -167,7 +167,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\meet4\\OneDrive\\Desktop\\blog\\apps\\api\\prisma\\generated",
+      "value": "C:\\Users\\meet4\\OneDrive\\Desktop\\blog\\apps\\api\\libs\\generated",
       "fromEnvVar": null
     },
     "config": {
@@ -188,7 +188,7 @@ const config = {
     "rootEnvPath": "../../.env",
     "schemaEnvPath": "../../.env"
   },
-  "relativePath": "..",
+  "relativePath": "../../prisma",
   "clientVersion": "6.10.1",
   "engineVersion": "9b628578b3b7cae625e8c927178f15a170e74a9c",
   "datasourceNames": [
@@ -204,8 +204,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        Int       @id @default(autoincrement())\n  name      String\n  email     String\n  bio       String?\n  avatar    String?\n  password  String\n  createdAt DateTime  @default(now())\n  updatedAt DateTime? @updatedAt\n  posts     Post[]\n  comments  Comment[]\n  Like      Like[]\n}\n\nmodel Post {\n  id        Int       @id @default(autoincrement())\n  slug      String    @unique\n  title     String\n  content   String\n  thumbnail String?\n  published Boolean\n  authorId  Int\n  author    User      @relation(fields: [authorId], references: [id])\n  comments  Comment[]\n  tags      Tag[]     @relation(\"PostTags\")\n  Like      Like[]\n}\n\nmodel Comment {\n  id        Int       @id @default(autoincrement())\n  content   String\n  post      Post      @relation(fields: [postId], references: [id])\n  author    User      @relation(fields: [authorId], references: [id])\n  createdAt DateTime  @default(now())\n  updatedAt DateTime? @updatedAt\n  postId    Int\n  authorId  Int\n}\n\nmodel Tag {\n  id    Int    @id @default(autoincrement())\n  name  String\n  posts Post[] @relation(\"PostTags\")\n}\n\nmodel Like {\n  id     Int @id @default(autoincrement())\n  postId Int\n  userId Int\n\n  user User @relation(fields: [userId], references: [id])\n  post Post @relation(fields: [postId], references: [id])\n}\n",
-  "inlineSchemaHash": "ed220a0ddeea6ed9fff94270e12db3cf2b5a596c628a1e27b67da3d0e305e8a8",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../libs/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        Int       @id @default(autoincrement())\n  name      String\n  email     String\n  bio       String?\n  avatar    String?\n  password  String\n  createdAt DateTime  @default(now())\n  updatedAt DateTime? @updatedAt\n  posts     Post[]\n  comments  Comment[]\n  Like      Like[]\n}\n\nmodel Post {\n  id        Int       @id @default(autoincrement())\n  slug      String    @unique\n  title     String\n  content   String\n  thumbnail String?\n  published Boolean\n  authorId  Int\n  author    User      @relation(fields: [authorId], references: [id])\n  comments  Comment[]\n  tags      Tag[]     @relation(\"PostTags\")\n  Like      Like[]\n}\n\nmodel Comment {\n  id        Int       @id @default(autoincrement())\n  content   String\n  post      Post      @relation(fields: [postId], references: [id])\n  author    User      @relation(fields: [authorId], references: [id])\n  createdAt DateTime  @default(now())\n  updatedAt DateTime? @updatedAt\n  postId    Int\n  authorId  Int\n}\n\nmodel Tag {\n  id    Int    @id @default(autoincrement())\n  name  String\n  posts Post[] @relation(\"PostTags\")\n}\n\nmodel Like {\n  id     Int @id @default(autoincrement())\n  postId Int\n  userId Int\n\n  user User @relation(fields: [userId], references: [id])\n  post Post @relation(fields: [postId], references: [id])\n}\n",
+  "inlineSchemaHash": "8dc8015c76058219c97c470686bd64635eb8095352249b10097c865dc3eed50f",
   "copyEngine": true
 }
 config.dirname = '/'
