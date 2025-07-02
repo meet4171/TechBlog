@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { PrismaClient } from '../libs/generated/client';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -97,4 +97,4 @@ main()
         console.error(e);
         process.exit(1);
     })
-    .finally(() => prisma.$disconnect());
+    .finally(() => { prisma.$disconnect() });
