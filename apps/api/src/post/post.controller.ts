@@ -1,5 +1,6 @@
-import { Body, Controller, Post, Get, Put, Delete } from '@nestjs/common';
+import { Body, Controller, Post, Get, Put, Delete, } from '@nestjs/common';
 import { PostsService } from './post.service';
+import { CreatePostDto } from 'src/post/dto/create-post.dto';
 
 @Controller('posts')
 export class PostController {
@@ -13,10 +14,19 @@ export class PostController {
   getPost() {
 
   }
-  @Post()
-  createPost() {
 
+  @Post()
+  async createPost(
+    @Body() body: CreatePostDto,
+  ) {
+    const post = await this.postsService.createPost(body);
+    return {
+      message: 'post created successfully',
+      post
+    }
   }
+
+
   @Put('/:id')
   editPost() {
 

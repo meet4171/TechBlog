@@ -83,7 +83,7 @@ async function main() {
             await prisma.like.create({
                 data: {
                     postId: post.id,
-                    userId: user.id,
+                    authorId: user.id,
                 },
             });
         }

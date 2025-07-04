@@ -32,7 +32,9 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-argument': 'off',
       'prettier/prettier': 'off',
       'eslint-disable-next-line': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off'
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': "off",
+      
 
     },
   },
