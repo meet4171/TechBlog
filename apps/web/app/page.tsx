@@ -4,6 +4,8 @@ import BlogCard from '@/components/BlogCard';
 import { motion, Variants } from 'framer-motion';
 import { TrendingUp, Users, BookOpen, ArrowRight } from 'lucide-react';
 import CountUp from 'react-countup';
+import { useRef } from 'react';
+import HorizontalScrollSection from '@/components/HorizontalScrollSection';
 
 
 const SafeCountUp = CountUp as unknown as React.FC<any>;
@@ -20,57 +22,57 @@ const featuredPosts = [
     category: 'Technology'
   },
   {
-    id: '1',
-    title: 'The Future of Web Development: Trends to Watch in 2025',
-    excerpt: 'Explore the latest trends shaping the future of web development, from AI integration to progressive web apps and beyond.',
-    author: 'Sarah Johnson',
-    date: 'Dec 28, 2024',
-    readTime: '5 min read',
-    image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=500',
-    category: 'Technology'
-  },
-  {
-    id: '1',
-    title: 'The Future of Web Development: Trends to Watch in 2025',
-    excerpt: 'Explore the latest trends shaping the future of web development, from AI integration to progressive web apps and beyond.',
-    author: 'Sarah Johnson',
-    date: 'Dec 28, 2024',
-    readTime: '5 min read',
-    image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=500',
-    category: 'Technology'
-  },
-  {
-    id: '1',
-    title: 'The Future of Web Development: Trends to Watch in 2025',
-    excerpt: 'Explore the latest trends shaping the future of web development, from AI integration to progressive web apps and beyond.',
-    author: 'Sarah Johnson',
-    date: 'Dec 28, 2024',
-    readTime: '5 min read',
-    image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=500',
-    category: 'Technology'
-  },
-  {
-    id: '1',
-    title: 'The Future of Web Development: Trends to Watch in 2025',
-    excerpt: 'Explore the latest trends shaping the future of web development, from AI integration to progressive web apps and beyond.',
-    author: 'Sarah Johnson',
-    date: 'Dec 28, 2024',
-    readTime: '5 min read',
-    image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=500',
-    category: 'Technology'
-  },
-  {
-    id: '1',
-    title: 'The Future of Web Development: Trends to Watch in 2025',
-    excerpt: 'Explore the latest trends shaping the future of web development, from AI integration to progressive web apps and beyond.',
-    author: 'Sarah Johnson',
-    date: 'Dec 28, 2024',
-    readTime: '5 min read',
-    image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=500',
-    category: 'Technology'
-  },
-  {
     id: '2',
+    title: 'The Future of Web Development: Trends to Watch in 2025',
+    excerpt: 'Explore the latest trends shaping the future of web development, from AI integration to progressive web apps and beyond.',
+    author: 'Sarah Johnson',
+    date: 'Dec 28, 2024',
+    readTime: '5 min read',
+    image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=500',
+    category: 'Technology'
+  },
+  {
+    id: '3',
+    title: 'The Future of Web Development: Trends to Watch in 2025',
+    excerpt: 'Explore the latest trends shaping the future of web development, from AI integration to progressive web apps and beyond.',
+    author: 'Sarah Johnson',
+    date: 'Dec 28, 2024',
+    readTime: '5 min read',
+    image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=500',
+    category: 'Technology'
+  },
+  {
+    id: '4',
+    title: 'The Future of Web Development: Trends to Watch in 2025',
+    excerpt: 'Explore the latest trends shaping the future of web development, from AI integration to progressive web apps and beyond.',
+    author: 'Sarah Johnson',
+    date: 'Dec 28, 2024',
+    readTime: '5 min read',
+    image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=500',
+    category: 'Technology'
+  },
+  {
+    id: '5',
+    title: 'The Future of Web Development: Trends to Watch in 2025',
+    excerpt: 'Explore the latest trends shaping the future of web development, from AI integration to progressive web apps and beyond.',
+    author: 'Sarah Johnson',
+    date: 'Dec 28, 2024',
+    readTime: '5 min read',
+    image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=500',
+    category: 'Technology'
+  },
+  {
+    id: '6',
+    title: 'The Future of Web Development: Trends to Watch in 2025',
+    excerpt: 'Explore the latest trends shaping the future of web development, from AI integration to progressive web apps and beyond.',
+    author: 'Sarah Johnson',
+    date: 'Dec 28, 2024',
+    readTime: '5 min read',
+    image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=500',
+    category: 'Technology'
+  },
+  {
+    id: '7',
     title: 'Building Sustainable Design Systems for Modern Applications',
     excerpt: 'Learn how to create and maintain design systems that scale with your team and product requirements.',
     author: 'Michael Chen',
@@ -80,7 +82,7 @@ const featuredPosts = [
     category: 'Design'
   },
   {
-    id: '3',
+    id: '8',
     title: 'The Art of Code Review: Best Practices for Team Collaboration',
     excerpt: 'Discover effective strategies for conducting code reviews that improve code quality and team communication.',
     author: 'Emily Rodriguez',
@@ -123,7 +125,7 @@ const recentPosts = [
     category: 'TypeScript'
   },
   {
-    id: '4',
+    id: '7',
     title: 'Understanding React Server Components',
     excerpt: 'A deep dive into React Server Components and how they revolutionize server-side rendering.',
     author: 'David Kim',
@@ -133,7 +135,7 @@ const recentPosts = [
     category: 'React'
   },
   {
-    id: '5',
+    id: '8',
     title: 'CSS Grid vs Flexbox: When to Use Which',
     excerpt: 'Master the differences between CSS Grid and Flexbox to choose the right layout method for your projects.',
     author: 'Anna Thompson',
@@ -143,7 +145,7 @@ const recentPosts = [
     category: 'CSS'
   },
   {
-    id: '6',
+    id: '9',
     title: 'TypeScript Tips for Better Code Quality',
     excerpt: 'Practical TypeScript tips and tricks to write more maintainable and error-free code.',
     author: 'James Wilson',
@@ -156,8 +158,8 @@ const recentPosts = [
 
 const stats = [
   { icon: BookOpen, value: 10000, label: 'Articles Published', color: 'blue' },
-  { icon: Users, value: 50000, label: 'Active Readers', color: 'purple' },
-  { icon: TrendingUp, value: 1000000, label: 'Monthly Views', color: 'green' }
+  { icon: Users, value: 50000, label: 'Active Readers', color: 'blue' },
+  { icon: TrendingUp, value: 1000000, label: 'Monthly Views', color: 'blue' }
 ];
 
 const animationVariants: Variants = {
@@ -231,7 +233,7 @@ export default function Home() {
       {/* Stats Section */}
       <section className="relative">
         {/* Sticky Header */}
-        <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 shadow-sm py-4">
+        <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 shadow-sm py-4 text-center">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Our Impact</h2>
           </div>
@@ -268,19 +270,18 @@ export default function Home() {
         </div>
       </section>
 
+
       {/* Featured Posts */}
-      <section className="bg-gray-50 dark:bg-gray-900 py-16">
-        {/* Sticky header inside scrollable page */}
-        <div className="sticky top-16 z-10 bg-gray-50 dark:bg-gray-900 shadow-sm py-4">
+      <section className="bg-white dark:bg-gray-800 py-16 mt-8">
+        <div className="sticky top-16 z-10 bg-white dark:bg-gray-800 shadow-sm py-4">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Featured Posts</h2>
-              <p className="text-gray-600 dark:text-gray-400">Discover our most popular articles</p>
+              <p className="text-gray-600 dark:text-gray-400">Stay up to date with the latest</p>
             </div>
           </div>
         </div>
 
-        {/* Section content scrolls as part of page */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-8">
           {featuredPosts.map((post, index) => (
             <motion.div
@@ -297,7 +298,7 @@ export default function Home() {
         </div>
       </section>
 
-
+      <HorizontalScrollSection posts={featuredPosts} />
 
       {/* Recent Posts */}
       <section className="bg-white dark:bg-gray-800 py-16 mt-32">
