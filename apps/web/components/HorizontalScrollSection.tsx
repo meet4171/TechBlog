@@ -2,24 +2,20 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import BlogCard from '@/components/BlogCard';
+import AdMedia from '@/components/AdMedia';
 
-interface Post {
+interface Ad {
     id: string;
-    title: string;
-    excerpt: string;
-    author: string;
-    date: string;
-    readTime: string;
-    image: string;
-    category: string;
+    type: 'image' | 'video';
+    src: string;
+    link?: string;
 }
 
 interface HorizontalScrollSectionProps {
-    posts: Post[];
+    ads: Ad[];
 }
 
-const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ posts }) => {
+const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ ads }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [totalScrollWidth, setTotalScrollWidth] = useState(0);
@@ -44,69 +40,79 @@ const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ posts
 
         window.addEventListener('resize', calculateDimensions);
         return () => {
-            timers.forEach(timer => clearTimeout(timer));
+            timers.forEach(clearTimeout);
             window.removeEventListener('resize', calculateDimensions);
         };
-    }, [posts]);
+    }, [ads]);
 
-    const horizontalScrollDistance = Math.max(0, totalScrollWidth - viewportWidth);
-    const verticalScrollHeight = horizontalScrollDistance * 3;
+    // Add extra space (1.5x viewport width) after last image
+    const horizontalScrollDistance = Math.max(0, totalScrollWidth - viewportWidth + (viewportWidth * 0.5));
+
+    const SCROLL_SPEED_MULTIPLIER = 0.8;
+    const verticalScrollHeight = horizontalScrollDistance * SCROLL_SPEED_MULTIPLIER;
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
-        offset: ["start start", "end start"]
+        offset: ['start start', 'end start'],
     });
 
     const x = useTransform(scrollYProgress, [0, 1], [0, -horizontalScrollDistance]);
 
     return (
-        <div className="relative mt-8">
-            {/* Vertical scroll space */}
+        <div className="relative mt-8 w-full">
             <div
                 ref={containerRef}
                 style={{
-                    height: ` ${verticalScrollHeight + (typeof window !== 'undefined' ? window.innerHeight : 800)} px
-                `}}
+                    height: ` ${verticalScrollHeight + (typeof window !== 'undefined' ? window.innerHeight : 800)}px`,
+                }}
             >
-                {/* Make the entire section sticky */}
-                <section className="sticky top-0 bg-white dark:bg-gray-800 py-16 h-screen overflow-hidden">
-                    {/* Header remains sticky within the section */}
-                    <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 shadow-sm py-4">
+                <section className="sticky top-0 bg-section py-16 h-screen w-full overflow-hidden">
+                    <div className="sticky top-0 z-10 bg-section shadow-sm py-4 w-full">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                             <div>
-                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Featured Posts</h2>
-                                <p className="text-gray-600 dark:text-gray-400">Stay up to date with the latest</p>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Featured Ads</h2>
+                                <p className="text-gray-600 dark:text-gray-400">Scroll to discover</p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Horizontal scroll content */}
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[calc(100%-80px)] pt-8">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[calc(100%-80px)] w-full pt-8">
                         <div className="relative w-full h-full overflow-hidden">
                             <motion.div
                                 ref={scrollContainerRef}
-                                className="flex h-full items-center gap-8 absolute top-0 left-0"
+                                className="flex h-full items-center"
                                 style={{ x }}
                             >
-                                {posts.map((post, index) => (
+                                {/* Left padding to center first item */}
+                                <div className="flex-shrink-0" />
+
+                                {ads.map((ad, index) => (
                                     <motion.div
-                                        key={post.id}
-                                        className="flex-shrink-0 w-80 h-full"
+                                        key={ad.id}
+                                        className="flex-shrink-0 w-[80vw] h-full flex items-center justify-center"
                                         initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: index * 0.1 }}
+                                        whileInView={{
+                                            opacity: 1,
+                                            y: 0,
+                                            transition: { delay: index * 0.1 }
+                                        }}
+                                        viewport={{
+                                            once: true,
+                                            margin: "0px 0px 0px 0px"
+                                        }}
                                     >
-                                        <BlogCard post={post} />
+                                        <AdMedia type={ad.type} src={ad.src} link={ad.link} />
                                     </motion.div>
                                 ))}
-                                <div className="flex-shrink-0 w-20"></div>
+
+                                {/* Extra right padding for scroll buffer */}
+                                <div className="flex-shrink-0" />
                             </motion.div>
                         </div>
                     </div>
                 </section>
             </div>
-        </div >
+        </div>
     );
 };
 

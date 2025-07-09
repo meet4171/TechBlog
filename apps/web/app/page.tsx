@@ -4,10 +4,27 @@ import BlogCard from '@/components/BlogCard';
 import { motion, Variants } from 'framer-motion';
 import { TrendingUp, Users, BookOpen, ArrowRight } from 'lucide-react';
 import CountUp from 'react-countup';
-import { useRef } from 'react';
 import HorizontalScrollSection from '@/components/HorizontalScrollSection';
 
-
+const ads = [
+  {
+    id: '1',
+    type: 'image' as 'image',
+    src: '/assets/images/write-blog.jpg',
+    link: 'https://targetwebsite.com',
+  },
+  {
+    id: '2',
+    type: 'image' as 'image',
+    src: '/assets/images/amazing-blog.jpg',
+    link: 'https://targetwebsite.com',
+  },
+  {
+    id: '3',
+    type: 'video' as 'video',
+    src: 'NdVHrTRD3wU', // YouTube video ID
+  },
+];
 const SafeCountUp = CountUp as unknown as React.FC<any>;
 
 const featuredPosts = [
@@ -157,9 +174,27 @@ const recentPosts = [
 ];
 
 const stats = [
-  { icon: BookOpen, value: 10000, label: 'Articles Published', color: 'blue' },
-  { icon: Users, value: 50000, label: 'Active Readers', color: 'blue' },
-  { icon: TrendingUp, value: 1000000, label: 'Monthly Views', color: 'blue' }
+  {
+    icon: BookOpen,
+    value: 10000,
+    label: 'Articles Published',
+    bgColor: 'bg-blue-100 dark:bg-blue-900',
+    textColor: 'text-blue-600 dark:text-blue-400'
+  },
+  {
+    icon: Users,
+    value: 50000,
+    label: 'Active Readers',
+    bgColor: 'bg-blue-100 dark:bg-blue-900',
+    textColor: 'text-blue-600 dark:text-blue-400'
+  },
+  {
+    icon: TrendingUp,
+    value: 1000000,
+    label: 'Monthly Views',
+    bgColor: 'bg-blue-100 dark:bg-blue-900',
+    textColor: 'text-blue-600 dark:text-blue-400'
+  }
 ];
 
 const animationVariants: Variants = {
@@ -175,7 +210,7 @@ const animationVariants: Variants = {
 };
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen bg-background transition-colors duration-300">
       {/* Hero Section */}
       <motion.section
         initial="hidden"
@@ -233,14 +268,14 @@ export default function Home() {
       {/* Stats Section */}
       <section className="relative">
         {/* Sticky Header */}
-        <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 shadow-sm py-4 text-center">
+        <div className="sticky top-0 z-10 bg-section shadow-sm py-4 text-center">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Our Impact</h2>
           </div>
         </div>
 
         {/* Content */}
-        <div className="bg-white dark:bg-gray-800 py-16">
+        <div className="bg-section py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
             {stats.map((stat, index) => (
               <motion.div
@@ -252,8 +287,8 @@ export default function Home() {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className={`bg-${stat.color}-100 dark:bg-${stat.color}-900 p-4 rounded-full w-max mx-auto mb-4`}>
-                  <stat.icon className={`h-8 w-8 text-${stat.color}-600 dark:text-${stat.color}-400`} />
+                <div className={`${stat.bgColor} p-4 rounded-full w-max mx-auto mb-4`}>
+                  <stat.icon className={`${stat.textColor} h-8 w-8`} />
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                   <SafeCountUp
@@ -298,10 +333,9 @@ export default function Home() {
         </div>
       </section>
 
-      <HorizontalScrollSection posts={featuredPosts} />
 
       {/* Recent Posts */}
-      <section className="bg-white dark:bg-gray-800 py-16 mt-32">
+      <section className="bg-white dark:bg-gray-800 py-16 mt-8">
         <div className="sticky top-16 z-10 bg-white dark:bg-gray-800 shadow-sm py-4">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <div>
@@ -326,6 +360,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <HorizontalScrollSection ads={ads} />
 
 
       {/* Newsletter Section */}

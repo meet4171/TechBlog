@@ -3,7 +3,7 @@ import { PenTool, Twitter, Github, Linkedin, Mail } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 dark:bg-gray-950 text-white transition-colors duration-300">
+    <footer className="bg-card text-foreground transition-colors duration-300">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}

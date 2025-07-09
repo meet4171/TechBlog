@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Calendar, User, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 
 interface BlogPost {
   id: string;
@@ -18,12 +19,14 @@ interface BlogCardProps {
 
 export default function BlogCard({ post }: BlogCardProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700">
-      <div className="relative">
-        <img
+    <div className="bg-card rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 border border-border">
+      <div className="relative aspect-video w-full overflow-hidden">
+        <Image
           src={post.image}
           alt={post.title}
-          className="w-full h-48 object-cover"
+          fill
+          className="object-cover"
+          priority
         />
         <div className="absolute top-4 left-4">
           <span className="bg-blue-600 dark:bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
@@ -33,17 +36,17 @@ export default function BlogCard({ post }: BlogCardProps) {
       </div>
 
       <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+        <h3 className="text-xl font-bold text-foreground mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
           <Link href={`/blog/${post.id}`}>
             {post.title}
           </Link>
         </h3>
 
-        <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
+        <p className="text-muted-foreground mb-4 line-clamp-3">
           {post.excerpt}
         </p>
 
-        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">
               <User className="h-4 w-4" />
@@ -60,7 +63,7 @@ export default function BlogCard({ post }: BlogCardProps) {
           </div>
         </div>
 
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="mt-4 pt-4 border-t border-border">
           <Link
             href={`/blog/${post.id}`}
             className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors duration-200"
