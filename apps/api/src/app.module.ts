@@ -8,10 +8,14 @@ import { LikesModule } from './likes/likes.module';
 import { UserModule } from './user/user.module';
 import { TagsModule } from './tags/tags.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [PrismaModule, PostModule, CommentModule, LikesModule, UserModule, TagsModule, AuthModule],
+  imports: [PrismaModule, PostModule, CommentModule, LikesModule, UserModule, TagsModule, AuthModule, ConfigModule.forRoot({
+    envFilePath: ['../.env'],
+    isGlobal: true,
+  })],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
