@@ -9,7 +9,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as argon2 from 'argon2';
 import type { User } from '@prisma/client'; // ✅ Type-only import
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { Roles } from 'src/enum/Roles.enum';
+import { ROLES } from 'src/enum/Roles.enum';
 
 @Injectable()
 export class UserService {
@@ -39,7 +39,7 @@ export class UserService {
         }
 
         const hashedPassword = await argon2.hash(userDto.password);
-        const userData = { ...userDto, role: Roles.USER, password: hashedPassword };
+        const userData = { ...userDto, role: ROLES.USER, password: hashedPassword };
 
         const user = await this.prismaService.user.create({ data: userData });
 

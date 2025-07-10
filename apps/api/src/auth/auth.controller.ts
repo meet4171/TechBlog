@@ -1,13 +1,15 @@
 import { Body, Controller, Get, NotFoundException, Post, Request, UseGuards } from '@nestjs/common';
-import { LocalAuthGuard } from 'src/auth/guard/LocalAuthGuard';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { Request as ExpressRequest } from 'express';
 import { User } from '@prisma/client';
 import { AuthService } from 'src/auth/auth.service';
-import { login_res_tokens } from 'types/type';
-import { JwtAuthGuard } from 'src/auth/guard/JwtAuthGuard';
-import { JwtRefreshAuthGuard } from 'src/auth/guard/JwtRefreshAuthGuard';
+import { Public } from 'src/decorators/public.decorator';
+import { JwtRefreshAuthGuard } from 'src/auth/guard/JwtRefreshAuthGuard.guard';
+import { LocalAuthGuard } from 'src/auth/guard/LocalAuthGuard.guard';
+import { payloadExtractor } from 'src/utils/helper.function';
+import { Roles } from 'src/decorators/roles.decorator';
+import { ROLES } from 'src/enum/Roles.enum'
 
 @Controller('auth')
 export class AuthController {
@@ -16,34 +18,49 @@ export class AuthController {
     private readonly userService: UserService
   ) { }
 
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req: ExpressRequest) {
     if (!req.user) throw new NotFoundException("user not found");
-    return this.authService.login(req.user as User);
+    const user = req.user;
+    const payload = payloadExtractor(user as User);
+    return this.authService.login(payload);
   }
 
 
+  @Public()
   @Post('signup')
-  async signup(@Body() userDto: CreateUserDto): Promise<login_res_tokens> {
+  async signup(@Body() userDto: CreateUserDto): Promise<LoginResTokens> {
     const user = await this.userService.signup(userDto);
     if (!user) throw new NotFoundException("user not found");
-    return this.authService.login(user as User);
+    const payload = payloadExtractor(user);
+    return this.authService.login(payload);
 
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('test')
   get(@Request() req: ExpressRequest) {
     if (!req.user) throw new NotFoundException('user not found');
-    console.log(req.user);
+    const user = req.user;
+    console.log(user);
+
   }
 
+  @Public()
   @UseGuards(JwtRefreshAuthGuard)
   @Get('test-refresh')
   getref(@Request() req: ExpressRequest) {
     if (!req.user) throw new NotFoundException('user not found');
-    console.log(req.user, 'refresh');
+    const payload = req.user as GenerateJwtPayload;
+    return this.authService.login(payload);
+
+  }
+
+  @Roles(ROLES.ADMIN, ROLES.USER)
+  @Get('admin')
+  adm() {
+    console.log('admin route')
   }
 
 }

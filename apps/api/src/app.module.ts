@@ -9,6 +9,9 @@ import { UserModule } from './user/user.module';
 import { TagsModule } from './tags/tags.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from 'src/auth/guard/JwtAuthGuard.guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 
 @Module({
   imports: [PrismaModule, PostModule, CommentModule, LikesModule, UserModule, TagsModule, AuthModule, ConfigModule.forRoot({
@@ -16,6 +19,17 @@ import { ConfigModule } from '@nestjs/config';
     isGlobal: true,
   })],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+
+  ],
 })
 export class AppModule { }
