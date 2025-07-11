@@ -18,10 +18,6 @@ export class CreateUserDto {
     @IsString()
     email: string;
 
-    @IsString()
-    password: string;
-
-
     @IsEnum(ROLES, { message: 'Role must be a valid enum value' })
     @IsOptional()
     role?: ROLES;

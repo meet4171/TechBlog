@@ -33,7 +33,6 @@ async function main() {
                     email: faker.internet.email(),
                     bio: faker.lorem.sentence(),
                     avatar: faker.image.avatar(),
-                    password: faker.internet.password(),
                 },
             })
         )

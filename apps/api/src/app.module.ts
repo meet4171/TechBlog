@@ -12,12 +12,15 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'src/auth/guard/JwtAuthGuard.guard';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [PrismaModule, PostModule, CommentModule, LikesModule, UserModule, TagsModule, AuthModule, ConfigModule.forRoot({
-    envFilePath: ['../.env'],
-    isGlobal: true,
-  })],
+  imports: [PrismaModule, PostModule, CommentModule, LikesModule, UserModule, TagsModule, AuthModule,
+    ConfigModule.forRoot({
+      envFilePath: ['../.env'],
+      isGlobal: true,
+    }),
+    ScheduleModule.forRoot()],
   controllers: [AppController],
   providers: [AppService,
 

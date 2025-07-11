@@ -16,9 +16,18 @@ declare global {
         id: number,
         email: string,
         role: string,
-
-
     }
+
+    type AuthResponse = {
+        id: number;
+        access_token: string;
+    }
+
+    type SendOtp = {
+        email: string;
+        otp: string
+    }
+
 }
 
 export { };

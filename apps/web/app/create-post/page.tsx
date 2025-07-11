@@ -7,7 +7,7 @@ import {
     Image as ImageIcon, Type, List, Bold, Italic,
     Link as LinkIcon, Quote
 } from 'lucide-react';
-import { DropdownItem } from '@/types/type';
+import { DropdownItem } from '@/types/global';
 import { Dropdown } from '@/components/Dropdown';
 
 const dropdownItems: DropdownItem[] = [

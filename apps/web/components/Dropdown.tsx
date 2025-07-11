@@ -1,4 +1,3 @@
-import { DropdownProps } from '@/types/type';
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 

@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  bio       String?
-  avatar    String?
-  password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  comments  Comment[]
-  Like      Like[]
-  posts     Post[]
-  role      Role      @default(USER)
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  bio          String?
+  avatar       String?
+  refreshToken String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
+  comments     Comment[]
+  Like         Like[]
+  posts        Post[]
+  role         Role      @default(USER)
 }
 
 model Post {
@@ -64,4 +64,12 @@ model Like {
 enum Role {
   USER
   ADMIN
+}
+
+model Otp {
+  id        Int      @id @default(autoincrement())
+  email     String
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
