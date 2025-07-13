@@ -15,23 +15,12 @@ export class UserService {
     constructor(private readonly prismaService: PrismaService) { }
 
 
-    async signup(userDto: CreateUserDto): Promise<User> {
 
-        const existingUser = await this.findByEmail(userDto.email);
-        if (existingUser) {
-            throw new ConflictException('User Already Exists ');
-        }
-
-        const userData = { ...userDto, role: ROLES.USER };
-
-        const user = await this.prismaService.user.create({ data: userData });
-
-        if (!user) {
-            throw new BadRequestException('User not created');
-        }
-
+    async findById(id: number): Promise<User | null> {
+        const user = await this.prismaService.user.findUnique({ where: { id } });
         return user;
     }
+
 
     async findByEmail(email: string): Promise<User | null> {
         const user = await this.prismaService.user.findUnique({
@@ -43,7 +32,7 @@ export class UserService {
         return user;
     }
 
-    async updateRefreshTokenById(userId: number, refreshToken: string) {
+    async updateRefreshTokenByUserId(userId: number, refreshToken: string) {
         const user = await this.prismaService.user.findUnique({
             where: { id: userId }
         })

@@ -50,6 +50,7 @@ export class OtpService {
         const authorized_user = await argon2.verify(latestOtp.code, otp_data.otp);
         if (!authorized_user) new UnauthorizedException('User is not Authorized');
 
+
         const now = new Date();
         if (latestOtp.expiresAt < now) {
             throw new BadRequestException('OTP has expired');

@@ -15,4 +15,10 @@ export async function hashTokenGenerator(token: string): Promise<string> {
     }
 }
 
+export async function validateArgonToken(token_hash: string, token: string): Promise<boolean> {
+    const valid_token = await argon2.verify(token_hash, token);
+    if (!valid_token) return false;
+    return true;
+}
+
 
