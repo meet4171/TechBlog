@@ -10,11 +10,12 @@ import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 import { JwtRefreshStrategy } from 'src/auth/strategy/jwt-refresh.strategy';
 import { OtpService } from 'src/otp/otp.service';
 import { MailService } from 'src/mailer/mailer.service';
+import { GoogleStrategy } from 'src/auth/strategy/google-auth.strategy';
 
 @Module({
   imports: [JwtModule],
   controllers: [AuthController],
-  providers: [AuthService, UserService, PrismaService, JwtStrategy, JwtRefreshStrategy, ConfigService, OtpService, MailService,
+  providers: [AuthService, UserService, PrismaService, JwtStrategy, JwtRefreshStrategy, ConfigService, OtpService, MailService, GoogleStrategy,
     {
       provide: 'jwt',
       inject: [ConfigService],

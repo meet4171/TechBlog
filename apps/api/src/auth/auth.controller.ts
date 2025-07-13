@@ -12,14 +12,12 @@ import { ConfigService } from '@nestjs/config';
 import { OtpService } from 'src/otp/otp.service';
 import { VerifySignupDto } from 'src/auth/dto/verify-singup.dto';
 import { userLoginDto } from 'src/auth/dto/user-login.dto';
+import { GoogleOauthGuard } from 'src/auth/guard/GooleAuthGuard.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly configService: ConfigService,
     private readonly authService: AuthService,
-    private readonly userService: UserService,
-    private readonly otpService: OtpService,
   ) { }
 
 
@@ -105,5 +103,28 @@ export class AuthController {
   adm() {
     console.log('admin route')
   }
+
+  @Public()
+  @UseGuards(GoogleOauthGuard)
+  @Get('google')
+  async auth(@Req() req: ExpressRequest, @Res() res: ExpressResponse): Promise<void> {
+    const google_token = req.cookies?.google_token;
+    const is_valid_token = await this.authService.validateGoogleToken(google_token);
+    if (is_valid_token) return res.redirect('/');
+  }
+
+  @Public()
+  @UseGuards(GoogleOauthGuard)
+  @Get('google/redirect')
+  googleRedirect(@Req() req: ExpressRequest, @Res() res: ExpressResponse) {
+    const user = req.user;
+    if (!user) throw new NotFoundException('User not returned from Google');
+    console.log('User from Google:', user);
+
+
+    return res.json({ message: 'Login successful', user });
+  }
+
+
 
 }

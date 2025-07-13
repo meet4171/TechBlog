@@ -32,7 +32,6 @@ export class OtpService {
 
         await this.mailService.sendOtpEmail({ email, otp });
 
-
     }
 
     async verifyOtp(otp_data: SendOtp): Promise<boolean> {

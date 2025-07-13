@@ -130,5 +130,33 @@ export class AuthService {
 
     }
 
+
+    async googleUser(createUser: CreateUserDto, res: Response) {
+        let user = await this.validateUser(createUser.email);
+
+        if (!user) {
+            user = await this.prisma.user.create({ data: createUser });
+            if (!user) throw new InternalServerErrorException('User not created');
+        }
+
+        const payload = payloadExtractor(user);
+        const tokens = await this.responseTokenGenerator(payload);
+        res.cookie('google_token', { refresh_token: tokens.refresh_token, id: tokens.id }, this.getCookieOptions());
+
+        return {
+            id: tokens.id,
+            access_token: tokens.access_token,
+        };
+    }
+
+    async validateGoogleToken(google_token: { refresh_token: string, id: number }): Promise<boolean> {
+
+        const user = await this.userService.findById(google_token.id);
+        if (!user || !user?.refreshToken) return false;
+
+        const valid_token = await validateArgonToken(user.refreshToken, google_token.refresh_token);
+        return valid_token;
+    }
+
 }
 
