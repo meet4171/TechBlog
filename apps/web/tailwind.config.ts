@@ -18,13 +18,16 @@ const config: Config = {
         background: 'rgb(var(--bg-general) / <alpha-value>)',
         foreground: 'rgb(var(--foreground) / <alpha-value>)',
         section: 'rgb(var(--section) / <alpha-value>)',
-        'btn-blue': 'rgb(var(--primary-button)/<alpha-value>)',
-        'btn-blue-hover': 'rgb(var(--primary-button-hover)/<alpha-value>)',
-        'btn-gray': 'rgb(var(--gray-button)/<alpha-value>)',
-        'btn-gray-hover': 'rgb(var(--gray-button-hover)/<alpha-value>)',
+        'btn-blue': 'rgb(var(--primary-button) / <alpha-value>)',
+        'btn-blue-hover': 'rgb(var(--primary-button-hover) / <alpha-value>)',
+        'btn-red': 'rgb(var(--red-button) / <alpha-value>)',
+        'btn-red-hover': 'rgb(var(--red-button-hover) / <alpha-value>)',
+        'btn-gray': 'rgb(var(--gray-button) / <alpha-value>)',
+        'btn-gray-hover': 'rgb(var(--gray-button-hover) / <alpha-value>)',
         'stats': 'rgb(var(--stats)/<alpha-value>)',
         'stats-hover': 'rgb(var(--stats-hover)/<alpha-value>)',
         'gray-heading': 'rgb(var(--text-gray-heading)/<alpha-value>)',
+        'text-error': 'rgb(var(--text-error)/<alpha-value>)',
 
         card: {
           DEFAULT: 'rgb(var(--card) / <alpha-value>)',
@@ -67,6 +70,7 @@ const config: Config = {
     },
   },
   plugins: [require('tailwindcss-animate')],
+
 };
 
 export default config;

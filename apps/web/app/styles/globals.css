@@ -21,11 +21,14 @@
   --primary-button: 37 99 235;
   --primary-button-hover: 29 78 216;
   --gray-button: 209 213 219;
+  --red-button: 239 68 68;
+  --red-button-hover: 220 38 38;
   --gray-button-hover: 156 163 175;
   --radius: 0.5rem;
   --stats: 242 242 242;
   --stats-hover: 230 230 230;
   --text-gray-heading: 75 85 99;
+  --text-error: 239 68 68;
 
 
 }
@@ -47,9 +50,13 @@
   --destructive-foreground: 255 255 255;
   --primary-button: 59 130 246;
   --primary-button-hover: 37 99 235;
+  --red-button: 239 68 68;
+  --red-button-hover: 220 38 38;
   --stats: 51 62 85;
   --stats-hover: 43 52 72;
   --text-gray-heading: 143 157 176;
+  --text-error: 239 68 68;
+
 
 
 }

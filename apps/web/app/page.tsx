@@ -5,6 +5,9 @@ import { motion, Variants } from 'framer-motion';
 import { TrendingUp, Users, BookOpen, ArrowRight } from 'lucide-react';
 import CountUp from 'react-countup';
 import HorizontalScrollSection from '@/components/HorizontalScrollSection';
+import { useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'next/navigation';
 
 const ads = [
   {
@@ -208,7 +211,21 @@ const animationVariants: Variants = {
     }
   }
 };
+
+
+
 export default function Home() {
+
+  const router = useRouter();
+  const { userId, accessToken } = useAuth();
+  useEffect(() => {
+
+    if (!userId || !accessToken) router.push('/');
+
+  }, [userId, accessToken])
+
+
+
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
       {/* Hero Section */}

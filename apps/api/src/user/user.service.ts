@@ -6,9 +6,7 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import type { User } from '@prisma/client'; // ✅ Type-only import
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { ROLES } from 'src/enum/Roles.enum';
+import type { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -32,9 +30,9 @@ export class UserService {
         return user;
     }
 
-    async updateRefreshTokenByUserId(userId: number, refreshToken: string) {
+    async updateRefreshTokenByUserId(id: number, refreshToken: string | null) {
         const user = await this.prismaService.user.findUnique({
-            where: { id: userId }
+            where: { id }
         })
         if (!user) {
             throw new NotFoundException('User not found');
@@ -42,7 +40,7 @@ export class UserService {
         try {
 
             await this.prismaService.user.update({
-                where: { id: userId },
+                where: { id },
                 data: { refreshToken },
             });
 

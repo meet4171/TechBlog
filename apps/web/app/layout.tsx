@@ -5,6 +5,8 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/app/contexts/ThemeContext';
 import ScrollToTopButton from '@/components/ScrollToTop';
+import { AuthProvider } from '@/app/contexts/AuthContext';
+import NetworkBanner from '@/components/NetworkBanner';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
@@ -25,14 +27,17 @@ export default function RootLayout({
         className={`${inter.className} bg-background text-foreground transition-colors duration-300 scroll-smooth`}
       >
         <ThemeProvider>
-          <div className="min-h-screen flex flex-col">
-            <Navigation />
-            <main className="flex-grow">
-              {children}
-              <ScrollToTopButton />
-            </main>
-            <Footer />
-          </div>
+          <AuthProvider>
+            <div className="min-h-screen flex flex-col">
+              <NetworkBanner />
+              <Navigation />
+              <main className="flex-grow">
+                {children}
+                <ScrollToTopButton />
+              </main>
+              <Footer />
+            </div>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

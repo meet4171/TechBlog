@@ -1,5 +1,4 @@
 import { Body, Controller, Get, NotFoundException, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { Request as ExpressRequest } from 'express';
 import { Response as ExpressResponse } from 'express';
@@ -8,8 +7,6 @@ import { Public } from 'src/decorators/public.decorator';
 import { JwtRefreshAuthGuard } from 'src/auth/guard/JwtRefreshAuthGuard.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { ROLES } from 'src/enum/Roles.enum'
-import { ConfigService } from '@nestjs/config';
-import { OtpService } from 'src/otp/otp.service';
 import { VerifySignupDto } from 'src/auth/dto/verify-singup.dto';
 import { userLoginDto } from 'src/auth/dto/user-login.dto';
 import { GoogleOauthGuard } from 'src/auth/guard/GooleAuthGuard.guard';
@@ -21,17 +18,17 @@ export class AuthController {
   ) { }
 
 
-
   @Public()
   @Post('login')
   async handleLoginWithOtp(
     @Body('email') email: string,
 
-  ): Promise<void> {
+  ): Promise<MailSent> {
 
-    await this.authService.login(email);
+    return await this.authService.login(email);
 
   }
+
 
   @Public()
   @Post('login/resend-otp')
@@ -77,14 +74,6 @@ export class AuthController {
 
   }
 
-  @Get('test')
-  get(@Req() req: ExpressRequest) {
-    if (!req.user) throw new NotFoundException('user not found');
-    const user = req.user;
-    return user;
-
-  }
-
   @Public()
   @UseGuards(JwtRefreshAuthGuard)
   @Post('refresh')
@@ -92,7 +81,7 @@ export class AuthController {
     @Req() req: ExpressRequest,
     @Res({ passthrough: true }) res: ExpressResponse) {
     if (!req.user) throw new NotFoundException('user not found');
-    const payload = req.user as GenerateJwtPayload;
+    const payload = req.user;
     const rawToken = req.cookies?.refresh_token;
     return this.authService.refresh(payload, rawToken, res);
 
@@ -111,6 +100,16 @@ export class AuthController {
     const google_token = req.cookies?.google_token;
     const is_valid_token = await this.authService.validateGoogleToken(google_token);
     if (is_valid_token) return res.redirect('/');
+  }
+
+  @Post('signout')
+  signOut(@Req() req: ExpressRequest, @Res({ passthrough: true }) res: ExpressResponse) {
+    const user = req.user;
+    console.log(user)
+    if (!user?.id) throw new NotFoundException('No user to logout');
+    const userId = Number(user.id);
+    return this.authService.signOut(userId, res);
+
   }
 
   @Public()

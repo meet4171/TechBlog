@@ -1,6 +1,10 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
+import * as fs from 'fs';
+import * as path from 'path';
+import { NotFoundError } from 'rxjs';
+
 
 @Injectable()
 export class MailService {
@@ -28,22 +32,28 @@ export class MailService {
     }
 
     async sendOtpEmail(otp: SendOtp): Promise<void> {
-        const html = `<div>
-      <h2>Your OTP for BlogSpace</h2>
-      <p><strong>${otp.otp}</strong></p>
-      <p>This OTP will expire in 2 minutes.</p>
-    </div>`;
+
+
+        const expireTime = this.configService.get<string>('OTP_EXPIRE_TIME') || '300000';
+        const expireTimeMin = Number(expireTime) / 60000;
+
+        const htmlPath = path.join(process.cwd(), 'src', 'mailer', 'otp-email.template.html');
+        const htmlTemplate = fs.readFileSync(htmlPath, 'utf-8');
+
+        const compiledHtml = htmlTemplate
+            .replace('{{otpCode}}', otp.otp)
+            .replace('{{expireTime}}', expireTimeMin.toString());
 
         const mailOptions = {
             from: `"BlogSpace Support" <${this.configService.get<string>('EMAIL_USER')}>`,
             to: otp.email,
             subject: 'Your OTP Code for BlogSpace',
-            text: `Your OTP code is: ${otp.otp}`,
-            html,
+            html: compiledHtml,
         };
 
         try {
             await this.transporter.sendMail(mailOptions);
+
         } catch (error) {
             console.error('Failed to send OTP email:', error.response || error.message || error);
             throw new InternalServerErrorException('Failed to send OTP email');

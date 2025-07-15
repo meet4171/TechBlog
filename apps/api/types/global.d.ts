@@ -1,10 +1,11 @@
+import * as express from 'express';
+
 declare global {
     type GenerateJwtPayload = {
         id: number;
         email: string;
         role: string;
     };
-
 
     type LoginResTokens = {
         id: number;
@@ -13,21 +14,29 @@ declare global {
     };
 
     type RefreshAceessToken = {
-        id: number,
-        email: string,
-        role: string,
-    }
+        id: number;
+        email: string;
+        role: string;
+    };
 
     type AuthResponse = {
         id: number;
         access_token: string;
-    }
+    };
 
     type SendOtp = {
         email: string;
-        otp: string
-    }
+        otp: string;
+    };
 
+    type MailSent = {
+        expiresAt: number;
+        message: string;
+    };
 }
 
-export { };
+declare module 'express' {
+    export interface Request {
+        user?: GenerateJwtPayload;
+    }
+}

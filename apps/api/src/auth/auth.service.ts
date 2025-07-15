@@ -32,8 +32,8 @@ export class AuthService {
         return {
             httpOnly: true,
             secure: NODE_ENV === 'production',
-            sameSite: 'strict',
-            path: '/auth/',
+            sameSite: 'lax',
+            path: '/',
             maxAge: cookieExpire,
         };
     }
@@ -50,14 +50,32 @@ export class AuthService {
 
     }
 
-    async login(email: string): Promise<void> {
+    async signOut(userId: number, res: Response) {
+        const NODE_ENV = this.configService.get<string>('NODE_ENV');
+        await this.userService.updateRefreshTokenByUserId(userId, null);
+
+        res.clearCookie('refresh_token', {
+            httpOnly: true,
+            secure: NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/',
+        });
+
+        return { message: 'Signed out successfully' };
+    }
+
+    async login(email: string): Promise<MailSent> {
+
+        const otp_expire_in = Number(this.configService.get<string>('OTP_EXPIRE_TIME')) || 300000;
+        if (!otp_expire_in) throw new NotFoundException("otp expire time not found in .env");
+
         const user = await this.validateUser(email);
         if (!user) throw new NotFoundException('User with this email does not exists');
         await this.otpService.sendOtp(email);
+        const mail_sent_obj = { expiresAt: +otp_expire_in, message: 'Check mail for the OTP' }
+        return mail_sent_obj
 
     }
-
-
 
     async responseTokenGenerator(payload: GenerateJwtPayload): Promise<LoginResTokens> {
         const access_token = this.jwtAccessService.sign(payload);
@@ -102,7 +120,7 @@ export class AuthService {
         if (!isValid) throw new BadRequestException('Invalid or expired OTP');
 
         const user = await this.userService.findByEmail(email);
-        if (!user) throw new NotFoundException('User not found');
+        if (!user) throw new NotFoundException('Invalid or expired OTP');
 
         const payload = payloadExtractor(user);
         const tokens = await this.responseTokenGenerator(payload);

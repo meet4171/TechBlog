@@ -1,16 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Menu, X, User, PenTool, Home, LogIn, UserPlus, Edit } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Navigation() {
+
+  const { accessToken } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
+
 
   return (
     <nav className="bg-card shadow-lg sticky top-0 z-50 transition-colors duration-300">
@@ -31,7 +47,6 @@ export default function Navigation() {
                 { href: '/', label: 'Home', icon: Home },
                 { href: '/create-post', label: 'Write', icon: Edit },
                 { href: '/profile', label: 'Profile', icon: User },
-                { href: '/login', label: 'Login', icon: LogIn }
               ].map(({ href, label, icon: Icon }) => (
                 <Link
                   key={href}
@@ -42,13 +57,25 @@ export default function Navigation() {
                   {label}
                 </Link>
               ))}
+              {!accessToken && isMounted && (
+                <Link
+                  href="/login"
+                  className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                >
+                  <LogIn className="inline h-4 w-4 mr-1" />
+                  Login
+                </Link>
+              )}
 
               <Link
-                href="/signup"
-                className=" text-white bg-btn-blue hover:bg-btn-blue-hover px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-              >
-                <UserPlus className="inline h-4 w-4 mr-1" />
-                Sign Up
+                href={accessToken && isMounted ? '/signout' : '/signup'}
+                className={`text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${accessToken
+                  ? 'bg-btn-red hover:bg-btn-red-hover'
+                  : 'bg-btn-blue hover:bg-btn-blue-hover'
+                  }`}>
+
+                {!accessToken && isMounted && <UserPlus className="inline h-4 w-4 mr-1" />}
+                {accessToken && isMounted ? 'Sign Out' : 'Sign Up'}
               </Link>
 
               <div className="flex items-center ml-4">
