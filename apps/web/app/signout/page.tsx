@@ -7,14 +7,15 @@ import { logout } from '@/lib/api/auth';
 
 export default function SignOutPage() {
 
+    const { clearAuth, accessToken } = useAuth();
+
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-
-    const { clearAuth, accessToken } = useAuth();
 
     useEffect(() => {
         if (accessToken) {
             try {
+
                 setLoading(true);
                 logout(accessToken);
 
@@ -24,10 +25,9 @@ export default function SignOutPage() {
             } finally {
                 clearAuth();
                 setLoading(false);
-                router.push('/');
             }
         }
-    }, []);
+    }, [accessToken, clearAuth, router]);
 
     return null;
 }

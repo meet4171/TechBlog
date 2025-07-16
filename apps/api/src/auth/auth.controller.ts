@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, InternalServerErrorException, NotFoundException, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { Request as ExpressRequest } from 'express';
 import { Response as ExpressResponse } from 'express';
@@ -18,6 +18,7 @@ export class AuthController {
   ) { }
 
 
+
   @Public()
   @Post('login')
   async handleLoginWithOtp(
@@ -29,6 +30,18 @@ export class AuthController {
 
   }
 
+  @Public()
+  @Post('signup')
+  async signup(
+    @Body() body: {
+      email: string;
+      agreeToTerms: boolean;
+    },
+  ): Promise<MailSent> {
+    if (!body.agreeToTerms) throw new InternalServerErrorException('Agree terms and conditions to go further')
+    return await this.authService.signup(body.email);
+
+  }
 
   @Public()
   @Post('login/resend-otp')
@@ -64,15 +77,6 @@ export class AuthController {
   }
 
 
-  @Public()
-  @Post('signup')
-  async signup(
-    @Body() userDto: CreateUserDto
-  ): Promise<void> {
-
-    return this.authService.signup(userDto);
-
-  }
 
   @Public()
   @UseGuards(JwtRefreshAuthGuard)

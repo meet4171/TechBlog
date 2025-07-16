@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsEnum, IsOptional, IsString } from "class-validator";
 import { ROLES } from "src/enum/Roles.enum";
 
 export class CreateUserDto {
@@ -21,6 +21,9 @@ export class CreateUserDto {
     @IsEnum(ROLES, { message: 'Role must be a valid enum value' })
     @IsOptional()
     role?: ROLES;
+
+    @IsBoolean()
+    agreeToTerms: boolean;
 
 }
 

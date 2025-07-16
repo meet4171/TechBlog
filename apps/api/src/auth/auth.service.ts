@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { CookieOptions, Response } from 'express';
+import { userLoginDto } from 'src/auth/dto/user-login.dto';
 import { OtpService } from 'src/otp/otp.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
@@ -43,10 +44,16 @@ export class AuthService {
         return user;
     }
 
-    async signup(userDto: CreateUserDto) {
-        const user = await this.validateUser(userDto.email);
+    async signup(email: string): Promise<MailSent> {
+        const otp_expire_in = Number(this.configService.get<string>('OTP_EXPIRE_TIME')) || 300000;
+        if (!otp_expire_in) throw new NotFoundException("otp expire time not found in .env");
+
+        const user = await this.validateUser(email);
         if (user) throw new InternalServerErrorException('User Already Exists');
-        await this.otpService.sendOtp(userDto.email);
+        await this.otpService.sendOtp(email);
+        const mail_sent_obj = { expiresAt: +otp_expire_in, message: 'Check mail for the OTP' }
+        return mail_sent_obj
+
 
     }
 

@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactElement => {
 
 
     useEffect(() => {
+
         const token = localStorage.getItem('accessToken');
         const id = localStorage.getItem('userId');
         if (token && id) {
@@ -26,6 +27,12 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactElement => {
     }, []);
 
     const setAuth = (token: string, userId: string) => {
+
+        if (!token || !userId) {
+            console.error('Token or ID is missing');
+            return;
+        }
+
         localStorage.setItem('accessToken', token);
         localStorage.setItem('userId', userId.toString());
         setAccessToken(token);

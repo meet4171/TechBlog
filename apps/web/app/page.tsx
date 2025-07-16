@@ -5,7 +5,7 @@ import { motion, Variants } from 'framer-motion';
 import { TrendingUp, Users, BookOpen, ArrowRight } from 'lucide-react';
 import CountUp from 'react-countup';
 import HorizontalScrollSection from '@/components/HorizontalScrollSection';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 
@@ -218,13 +218,20 @@ export default function Home() {
 
   const router = useRouter();
   const { userId, accessToken } = useAuth();
+
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
+
   useEffect(() => {
+    if (!userId || !accessToken) {
+      router.replace('/login');
+    } else {
+      setIsAuthChecked(true);
+    }
+  }, [userId, accessToken, router]);
 
-    if (!userId || !accessToken) router.push('/');
-
-  }, [userId, accessToken])
-
-
+  if (!isAuthChecked) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">

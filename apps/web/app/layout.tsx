@@ -26,17 +26,19 @@ export default function RootLayout({
       <body
         className={`${inter.className} bg-background text-foreground transition-colors duration-300 scroll-smooth`}
       >
+
+
         <ThemeProvider>
           <AuthProvider>
-            <div className="min-h-screen flex flex-col">
-              <NetworkBanner />
-              <Navigation />
-              <main className="flex-grow">
-                {children}
-                <ScrollToTopButton />
-              </main>
-              <Footer />
-            </div>
+              <div className="min-h-screen flex flex-col">
+                <NetworkBanner />
+                <Navigation />
+                <main className="flex-grow">
+                  {children}
+                  <ScrollToTopButton />
+                </main>
+                <Footer />
+              </div>
           </AuthProvider>
         </ThemeProvider>
       </body>

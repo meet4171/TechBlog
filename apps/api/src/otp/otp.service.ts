@@ -53,7 +53,7 @@ export class OtpService {
         });
 
         if (!latestOtp) {
-            throw new BadRequestException('No OTP found for this email');
+            throw new BadRequestException('Invalid OTP');
         }
 
         const authorized_user = await argon2.verify(latestOtp.code, otp_data.otp);

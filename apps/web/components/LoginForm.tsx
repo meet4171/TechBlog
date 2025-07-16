@@ -7,22 +7,27 @@ import Link from 'next/link';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { loginApi, verifyLoginOtp } from '@/lib/api/auth';
 import LoadingSvg from '@/components/LoadingSvg';
-import { Email, LoginData } from '@/types/auth';
-import { EmailSchema, LoginSchema } from '@/lib/zod/auth';
+import { LoginData, LoginFormData, VerifyLoginEmail } from '@/types/auth';
+import { LoginEmailSchema, LoginSchema } from '@/lib/zod/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils/cn.utility';
 
 const CombinedLoginForm = () => {
     const [otpSent, setOtpSent] = useState(false);
     const [otpExpiry, setOtpExpiry] = useState<number | null>(null);
+    const [otpDuration, setOtpDuration] = useState<number | null>(null);
     const [timeLeft, setTimeLeft] = useState<number | null>(null);
     const [loading, setLoading] = useState(false);
     const [otpError, setOtpError] = useState<string | null>(null);
+    const [resendCooldown, setResendCooldown] = useState(false);
 
-    const formSchema = useMemo(() => otpSent ? LoginSchema : EmailSchema, [otpSent]);
 
     const { setAuth } = useAuth();
     const router = useRouter();
+
+    const FormSchema = useMemo(() => (otpSent ? LoginSchema : LoginEmailSchema), [otpSent]);
+
 
 
     const {
@@ -32,32 +37,35 @@ const CombinedLoginForm = () => {
         setError,
         clearErrors,
         resetField,
-        reset
-    } = useForm<LoginData>({
-        resolver: zodResolver(formSchema),
+        reset,
+        getValues
+    } = useForm<LoginFormData>({
+        resolver: zodResolver(FormSchema),
         mode: 'onSubmit',
         defaultValues: {
             email: ''
         }
     });
 
-    const onError = (errors: FieldErrors<LoginData>) => {
+    const onError = (errors: FieldErrors<LoginFormData>) => {
         console.error('Form validation failed:', errors);
     };
 
-    const handleSendOtp = async (data: Email) => {
+    const handleSendOtp = async (data: VerifyLoginEmail) => {
         resetField('otp');
         setOtpSent(false);
         setTimeLeft(null);
         setOtpExpiry(null);
+        setOtpDuration(null);
         setOtpError(null);
         clearErrors('otp');
         setLoading(true);
 
         try {
-            const resp = await loginApi(data.email);
+            const resp = await loginApi(data);
             const expiryTimestamp = Date.now() + resp.expiresAt;
             setOtpExpiry(expiryTimestamp);
+            setOtpDuration(resp.expiresAt);
             setOtpSent(true);
             clearErrors('email');
         } catch (error: any) {
@@ -73,13 +81,21 @@ const CombinedLoginForm = () => {
         }
     };
 
+    const handleResendOtp = () => {
+        const email = getValues('email');
+        if (!email || resendCooldown) return;
+
+        handleSendOtp({ email });
+        setResendCooldown(true);
+        setTimeout(() => setResendCooldown(false), 40000);
+    };
 
 
     const handleVerifyOtp = async (data: LoginData) => {
         try {
             setLoading(true);
             const resp = await verifyLoginOtp(data);
-            setAuth(resp.access_token, resp.userId);
+            setAuth(resp.access_token, resp.id);
             reset()
             router.replace('/');
 
@@ -96,11 +112,11 @@ const CombinedLoginForm = () => {
         // Add your Google login logic here
     };
 
-    const submitHandler = (data: LoginData) => {
+    const submitHandler = (data: LoginFormData) => {
         if (!otpSent) {
-            handleSendOtp(data);
+            handleSendOtp(data as VerifyLoginEmail);
         } else {
-            handleVerifyOtp(data);
+            handleVerifyOtp(data as LoginData);
         }
     }
 
@@ -180,11 +196,15 @@ const CombinedLoginForm = () => {
 
                     {/* OTP Field (shown only when OTP is sent and time is left) */}
 
-                    <div
-                        className={`transition-all duration-500 ease-in-out ${otpSent && timeLeft !== null && timeLeft > 0
-                            ? 'opacity-100 max-h-[500px] translate-y-0 pointer-events-auto'
-                            : 'opacity-0 max-h-0 -translate-y-2 pointer-events-none'}overflow-hidden`}
-                    >
+                    <div className={cn(
+                        'transition-all duration-500 ease-in-out overflow-visible', // Changed from overflow-hidden
+                        {
+                            'opacity-100 max-h-[500px] translate-y-0 pointer-events-auto':
+                                otpSent && timeLeft !== null && timeLeft > 0,
+                            'opacity-0 max-h-0 -translate-y-2 pointer-events-none':
+                                !otpSent || timeLeft === null || timeLeft <= 0,
+                        }
+                    )}>
                         <div>
                             <label htmlFor="otp" className="block text-sm font-medium text-foreground">
                                 Enter OTP
@@ -209,7 +229,7 @@ const CombinedLoginForm = () => {
                                             e.preventDefault();
                                         }
                                     }}
-                                    className={`block w-full pl-10 pr-3 py-2 border ${errors.otp || otpError ? 'border-red-500' : 'border-border'} rounded-md bg-background text-sm placeholder:text-muted-foreground focus:outline-none focus:ring focus:ring-primary`}
+                                    className={`block w-full pl-10 pr-3 py-2 border ${errors.otp ? 'border-red-500' : 'border-border'} rounded-md bg-background text-sm placeholder:text-muted-foreground focus:outline-none focus:ring focus:ring-primary`}
                                     placeholder="Enter 6-digit OTP"
                                 />
                             </div>
@@ -223,6 +243,20 @@ const CombinedLoginForm = () => {
                                     {errors.otp?.message || otpError}
                                 </p>
                             )}
+                            {otpSent && otpDuration && timeLeft !== null && timeLeft <= (otpDuration / 1000) * 0.3 && timeLeft > 0 && (
+                                <button
+                                    type="button"
+                                    onClick={handleResendOtp}
+                                    disabled={resendCooldown}
+                                    className={cn("mt-2 text-sm hover:underline", {
+                                        "text-gray-400 cursor-not-allowed": resendCooldown,
+                                        "text-primary": !resendCooldown
+                                    })}
+                                >
+                                    Resend OTP
+                                </button>
+                            )}
+
                         </div>
 
 
@@ -276,14 +310,14 @@ const CombinedLoginForm = () => {
                 {/* Sign up link */}
                 <div className="mt-6 text-center">
                     <p className="text-sm text-muted-foreground">
-                        Don't have an account?{' '}
+                        Don&apos;t have an account?{' '}
                         <Link href="/signup" className="text-primary hover:underline">
                             Sign up here
                         </Link>
                     </p>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
