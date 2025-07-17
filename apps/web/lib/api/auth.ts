@@ -71,16 +71,11 @@ export const verifyLoginOtp = async (credentials: LoginData) => {
         });
 
         if (!response.ok) {
-            let errorData;
-            try {
-                errorData = await response.json();
-            } catch (e) {
-                errorData = { message: `HTTP error! status: ${response.status}` };
-            }
-            throw new Error(errorData.message || 'Login failed');
+            const errorData = await response.json().catch(() => null);
+            throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
         }
-
         return await response.json();
+
     } catch (err) {
         console.error('Login error:', err);
         throw err;
@@ -99,15 +94,9 @@ export const verifySignupOtp = async (data: SignupData) => {
         });
 
         if (!response.ok) {
-            let errorData;
-            try {
-                errorData = await response.json();
-            } catch (e) {
-                errorData = { message: `HTTP error! status: ${response.status}` };
-            }
-            throw new Error(errorData.message || 'Login failed');
+            const errorData = await response.json().catch(() => null);
+            throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
         }
-
         return await response.json();
     } catch (err) {
         console.error('Login error:', err);
@@ -115,14 +104,25 @@ export const verifySignupOtp = async (data: SignupData) => {
     }
 };
 
-export const logout = async (accessToken: string) => {
+export const authenticateUser = async () => {
+    const res = await fetch('http://localhost:8080/auth/me', {
+        method: 'GET',
+        credentials: 'include',
+    });
+
+    if (!res.ok) {
+        throw new Error('kindly login');
+    }
+
+    return await res.json();
+};
+
+export const logout = async () => {
     try {
         await fetch('http://localhost:8080/auth/signout', {
             method: 'POST',
             credentials: 'include',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
+
         });
     } catch (err) {
         throw new Error('Logout failed')

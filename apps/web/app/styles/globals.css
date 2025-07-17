@@ -2,11 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
 :root {
   --tw-bg-opacity: 1;
   --bg-general: 243 243 243;
-  --foreground: 17 17 17;
-  --card: 255 255 255;
+  --foreground: 70 70 70;
+  --card: 251 251 251;
   --card-foreground: 17 17 17;
   --section: 255 255 255;
   --primary: 59 130 246;
@@ -28,14 +32,17 @@
   --stats: 242 242 242;
   --stats-hover: 230 230 230;
   --text-gray-heading: 75 85 99;
+  --text-gray-subheading: 127 127 127;
   --text-error: 239 68 68;
-
+  --text-logo: 37 99 235;
+  --toastify-color-light: rgb(var(--section));
+  --toastify-color-dark: rgb(var(--section));
 
 }
 
 .dark {
   --bg-general: 17 24 39;
-  --foreground: 255 255 255;
+  --foreground: 210 210 210;
   --card: 24 33 55;
   --card-foreground: 255 255 255;
   --section: 30 41 59;
@@ -56,6 +63,7 @@
   --stats-hover: 43 52 72;
   --text-gray-heading: 143 157 176;
   --text-error: 239 68 68;
+  --text-logo: 93 134 226;
 
 
 
@@ -197,4 +205,58 @@
   background-color: transparent;
   color: inherit;
   padding: 0;
+}
+
+
+@layer components {
+  .loader {
+    @apply relative w-[50px] aspect-square rounded-full bg-[#398EB6];
+    color: #398EB6;
+  }
+
+  .loader::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(farthest-side at bottom right, #0000 94%, currentColor 96%) 0 0,
+      radial-gradient(farthest-side at bottom left, #0000 94%, currentColor 96%) 100% 0,
+      radial-gradient(farthest-side at top left, #0000 94%, currentColor 96%) 100% 100%,
+      radial-gradient(farthest-side at top right, #0000 94%, currentColor 96%) 0 100%;
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    animation:
+      l39-expand 1s infinite,
+      l39-rotate 1s infinite;
+  }
+}
+
+@layer utilities {
+  @keyframes l39-expand {
+
+    0%,
+    10%,
+    90%,
+    100% {
+      inset: 0;
+    }
+
+    40%,
+    60% {
+      inset: -10px;
+    }
+  }
+
+  @keyframes l39-rotate {
+
+    0%,
+    40% {
+      transform: rotate(0deg);
+    }
+
+    60%,
+    100% {
+      transform: rotate(90deg);
+    }
+  }
 }

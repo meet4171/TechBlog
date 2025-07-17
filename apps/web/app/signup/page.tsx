@@ -5,18 +5,16 @@ import Link from 'next/link';
 import { Mail, Lock, User, ArrowRight } from 'lucide-react';
 import LoadingSvg from '@/components/LoadingSvg';
 import { FieldErrors, useForm } from 'react-hook-form';
-import { LoginData, SignupData, SignupFormData, VerifySignupEmail } from '@/types/auth';
+import { SignupData, SignupFormData, VerifySignupEmail } from '@/types/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupEmailSchema, SignUpSchema } from '@/lib/zod/auth';
-import { singupApi, verifyLoginOtp, verifySignupOtp } from '@/lib/api/auth';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
+import { singupApi, verifySignupOtp } from '@/lib/api/auth';
 import { cn } from '@/lib/utils/cn.utility';
+import GuestRoute from '@/routes/GuestRoute';
 
 export default function SignUp() {
 
-    const { setAuth } = useAuth()
-    const router = useRouter()
+
     const [otpSent, setOtpSent] = useState(false);
     const [otpExpiry, setOtpExpiry] = useState<number | null>(null);
     const [otpDuration, setOtpDuration] = useState<number | null>(null);
@@ -96,10 +94,11 @@ export default function SignUp() {
         try {
             setLoading(true);
             const resp = await verifySignupOtp(data);
-            setAuth(resp.access_token, resp.id);
-            reset()
-            router.replace('/');
+            console.log(resp);
+            // if (resp) {
+            // }
 
+            reset()
         } catch (error: any) {
             console.error(error);
             setOtpError(error.message || 'Invalid OTP. Please try again.');

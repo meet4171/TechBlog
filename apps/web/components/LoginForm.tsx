@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { FieldErrors, SubmitHandler, useForm } from 'react-hook-form';
+import { FieldErrors, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
@@ -9,11 +9,14 @@ import { loginApi, verifyLoginOtp } from '@/lib/api/auth';
 import LoadingSvg from '@/components/LoadingSvg';
 import { LoginData, LoginFormData, VerifyLoginEmail } from '@/types/auth';
 import { LoginEmailSchema, LoginSchema } from '@/lib/zod/auth';
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils/cn.utility';
+import { useAuth } from '@/app/contexts/AuthContext';
+
 
 const CombinedLoginForm = () => {
+
+    const { setCurrentUser } = useAuth();
+
     const [otpSent, setOtpSent] = useState(false);
     const [otpExpiry, setOtpExpiry] = useState<number | null>(null);
     const [otpDuration, setOtpDuration] = useState<number | null>(null);
@@ -23,12 +26,8 @@ const CombinedLoginForm = () => {
     const [resendCooldown, setResendCooldown] = useState(false);
 
 
-    const { setAuth } = useAuth();
-    const router = useRouter();
 
     const FormSchema = useMemo(() => (otpSent ? LoginSchema : LoginEmailSchema), [otpSent]);
-
-
 
     const {
         register,
@@ -95,9 +94,11 @@ const CombinedLoginForm = () => {
         try {
             setLoading(true);
             const resp = await verifyLoginOtp(data);
-            setAuth(resp.access_token, resp.id);
+            if (resp) {
+                setCurrentUser(resp);
+            }
+
             reset()
-            router.replace('/');
 
         } catch (error: any) {
             console.error(error);

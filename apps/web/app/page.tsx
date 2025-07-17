@@ -6,8 +6,9 @@ import { TrendingUp, Users, BookOpen, ArrowRight } from 'lucide-react';
 import CountUp from 'react-countup';
 import HorizontalScrollSection from '@/components/HorizontalScrollSection';
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+import ProtectedRoute from '@/routes/ProtectedRoute';
 
 const ads = [
   {
@@ -213,208 +214,193 @@ const animationVariants: Variants = {
 };
 
 
-
 export default function Home() {
 
-  const router = useRouter();
-  const { userId, accessToken } = useAuth();
-
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
-
-  useEffect(() => {
-    if (!userId || !accessToken) {
-      router.replace('/login');
-    } else {
-      setIsAuthChecked(true);
-    }
-  }, [userId, accessToken, router]);
-
-  if (!isAuthChecked) {
-    return null;
-  }
 
   return (
-    <div className="min-h-screen bg-background transition-colors duration-300">
-      {/* Hero Section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={animationVariants}
-        className="bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-700 dark:to-purple-800 text-white"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <motion.h1
-            variants={animationVariants}
-            className="text-4xl md:text-6xl font-bold mb-6"
-          >
-            Share Your Stories,
-            <br />
-            <motion.span
+    <ProtectedRoute>
+      <div className="min-h-screen bg-background transition-colors duration-300">
+        {/* Hero Section */}
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={animationVariants}
+          className="bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-700 dark:to-purple-800 text-white"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+            <motion.h1
               variants={animationVariants}
-              className="text-blue-200 dark:text-blue-300 block mt-2"
+              className="text-4xl md:text-6xl font-bold mb-6"
             >
-              Inspire the World
-            </motion.span>
-          </motion.h1>
+              Share Your Stories,
+              <br />
+              <motion.span
+                variants={animationVariants}
+                className="text-blue-200 dark:text-blue-300 block mt-2"
+              >
+                Inspire the World
+              </motion.span>
+            </motion.h1>
 
-          <motion.p
-            variants={animationVariants}
-            className="text-xl md:text-2xl mb-8 text-blue-100 dark:text-blue-200 max-w-3xl mx-auto"
-          >
-            Join thousands of writers and readers in our vibrant community.
-          </motion.p>
-
-          <motion.div
-            variants={animationVariants}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-          >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center"
+            <motion.p
+              variants={animationVariants}
+              className="text-xl md:text-2xl mb-8 text-blue-100 dark:text-blue-200 max-w-3xl mx-auto"
             >
-              Start Writing
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </motion.button>
+              Join thousands of writers and readers in our vibrant community.
+            </motion.p>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors duration-200"
+            <motion.div
+              variants={animationVariants}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              Explore Posts
-            </motion.button>
-          </motion.div>
-        </div>
-      </motion.section>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center"
+              >
+                Start Writing
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </motion.button>
 
-      {/* Stats Section */}
-      <section className="relative">
-        {/* Sticky Header */}
-        <div className="sticky top-0 z-10 bg-section shadow-sm py-4 text-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Our Impact</h2>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors duration-200"
+              >
+                Explore Posts
+              </motion.button>
+            </motion.div>
           </div>
-        </div>
+        </motion.section>
 
-        {/* Content */}
-        <div className="bg-section py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-            {stats.map((stat, index) => (
+        {/* Stats Section */}
+        <section className="relative">
+          {/* Sticky Header */}
+          <div className="sticky top-0 z-10 bg-section shadow-sm py-4 text-center">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Our Impact</h2>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="bg-section py-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={animationVariants}
+                  transition={{ delay: index * 0.1 }}
+                  className="text-center"
+                >
+                  <div className={`${stat.bgColor} p-4 rounded-full w-max mx-auto mb-4`}>
+                    <stat.icon className={`${stat.textColor} h-8 w-8`} />
+                  </div>
+                  <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    <SafeCountUp
+                      end={stat.value}
+                      duration={2}
+                      separator=","
+                      suffix="+"
+                    />
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">{stat.label}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+
+        {/* Featured Posts */}
+        <section className="bg-white dark:bg-gray-800 py-16 mt-8">
+          <div className="sticky top-16 z-10 bg-white dark:bg-gray-800 shadow-sm py-4">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Featured Posts</h2>
+                <p className="text-gray-600 dark:text-gray-400">Stay up to date with the latest</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-8">
+            {featuredPosts.map((post, index) => (
               <motion.div
-                key={index}
+                key={post.id}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={animationVariants}
                 transition={{ delay: index * 0.1 }}
-                className="text-center"
               >
-                <div className={`${stat.bgColor} p-4 rounded-full w-max mx-auto mb-4`}>
-                  <stat.icon className={`${stat.textColor} h-8 w-8`} />
-                </div>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  <SafeCountUp
-                    end={stat.value}
-                    duration={2}
-                    separator=","
-                    suffix="+"
-                  />
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">{stat.label}</p>
+                <BlogCard post={post} />
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
 
-      {/* Featured Posts */}
-      <section className="bg-white dark:bg-gray-800 py-16 mt-8">
-        <div className="sticky top-16 z-10 bg-white dark:bg-gray-800 shadow-sm py-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Featured Posts</h2>
-              <p className="text-gray-600 dark:text-gray-400">Stay up to date with the latest</p>
+        {/* Recent Posts */}
+        <section className="bg-white dark:bg-gray-800 py-16 mt-8">
+          <div className="sticky top-16 z-10 bg-white dark:bg-gray-800 shadow-sm py-4">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Recent Posts</h2>
+                <p className="text-gray-600 dark:text-gray-400">Stay up to date with the latest</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-8">
-          {featuredPosts.map((post, index) => (
-            <motion.div
-              key={post.id}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={animationVariants}
-              transition={{ delay: index * 0.1 }}
-            >
-              <BlogCard post={post} />
-            </motion.div>
-          ))}
-        </div>
-      </section>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-8">
+            {recentPosts.map((post, index) => (
+              <motion.div
+                key={post.id}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={animationVariants}
+                transition={{ delay: index * 0.1 }}
+              >
+                <BlogCard post={post} />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        <HorizontalScrollSection ads={ads} />
 
 
-      {/* Recent Posts */}
-      <section className="bg-white dark:bg-gray-800 py-16 mt-8">
-        <div className="sticky top-16 z-10 bg-white dark:bg-gray-800 shadow-sm py-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Recent Posts</h2>
-              <p className="text-gray-600 dark:text-gray-400">Stay up to date with the latest</p>
+        {/* Newsletter Section */}
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={animationVariants}
+          className="py-16 bg-blue-600 dark:bg-blue-700"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+            <h2 className="text-3xl font-bold mb-4">Stay in the Loop</h2>
+            <p className="text-xl mb-8 text-blue-100 dark:text-blue-200">
+              Get the latest posts and updates
+            </p>
+            <div className="max-w-md mx-auto">
+              <div className="flex">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="flex-1 px-4 py-3 rounded-l-lg text-gray-900 dark:text-gray-100 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                />
+                <button className="bg-blue-800 dark:bg-blue-600 text-white px-6 py-3 rounded-r-lg hover:bg-blue-900 dark:hover:bg-blue-700 transition-colors duration-200 font-semibold">
+                  Subscribe
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-8">
-          {recentPosts.map((post, index) => (
-            <motion.div
-              key={post.id}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={animationVariants}
-              transition={{ delay: index * 0.1 }}
-            >
-              <BlogCard post={post} />
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      <HorizontalScrollSection ads={ads} />
-
-
-      {/* Newsletter Section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={animationVariants}
-        className="py-16 bg-blue-600 dark:bg-blue-700"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Stay in the Loop</h2>
-          <p className="text-xl mb-8 text-blue-100 dark:text-blue-200">
-            Get the latest posts and updates
-          </p>
-          <div className="max-w-md mx-auto">
-            <div className="flex">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 rounded-l-lg text-gray-900 dark:text-gray-100 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300"
-              />
-              <button className="bg-blue-800 dark:bg-blue-600 text-white px-6 py-3 rounded-r-lg hover:bg-blue-900 dark:hover:bg-blue-700 transition-colors duration-200 font-semibold">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </div>
-      </motion.section>
-    </div>
+        </motion.section>
+      </div>
+    </ProtectedRoute>
   );
 }

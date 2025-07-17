@@ -7,8 +7,8 @@ import {
     Image as ImageIcon, Type, List, Bold, Italic,
     Link as LinkIcon, Quote
 } from 'lucide-react';
-import { DropdownItem } from '@/types/global';
 import { Dropdown } from '@/components/Dropdown';
+import ProtectedRoute from '@/routes/ProtectedRoute';
 
 const dropdownItems: DropdownItem[] = [
     { label: 'Dashboard', onClick: () => console.log('Dashboard clicked') },
@@ -25,7 +25,6 @@ const categories = [
 ];
 
 export default function CreatePost() {
-
 
 
     const [formData, setFormData] = useState({
@@ -143,7 +142,9 @@ export default function CreatePost() {
         </div>
     );
 
-    return (
+    return <ProtectedRoute>
+
+
         <div className="min-h-screen bg-background text-gray-800 dark:text-white pb-24">
             {/* Header */}
             <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
@@ -309,5 +310,6 @@ export default function CreatePost() {
                 </div>
             </div>
         </div>
-    );
+        );
+    </ProtectedRoute>
 }

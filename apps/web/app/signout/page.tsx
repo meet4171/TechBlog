@@ -1,33 +1,31 @@
 'use client';
 
 import { useEffect, useContext, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
 import { logout } from '@/lib/api/auth';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function SignOutPage() {
 
-    const { clearAuth, accessToken } = useAuth();
+    const { user, setCurrentUser } = useAuth();
 
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
 
     useEffect(() => {
-        if (accessToken) {
+        if (user) {
+            setLoading(true);
             try {
 
-                setLoading(true);
-                logout(accessToken);
+                logout();
 
             } catch (error) {
                 console.log(error);
 
             } finally {
-                clearAuth();
+                setCurrentUser(null);
                 setLoading(false);
             }
         }
-    }, [accessToken, clearAuth, router]);
+    }, []);
 
     return null;
 }

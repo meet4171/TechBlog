@@ -1,56 +1,72 @@
 'use client';
 
-import { AuthContextType, AuthProviderProps } from '@/types/auth';
-import { useRouter } from 'next/navigation';
-import { createContext, useState, ReactElement, useEffect } from 'react';
+import {
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+    useCallback,
+    ReactNode,
+} from 'react';
+import { usePathname } from 'next/navigation';
+import { authenticateUser } from '@/lib/api/auth';
+import { JwtPayload } from '@/types/data';
+import Loader from '@/components/Loader';
 
+type AuthContextType = {
+    user: JwtPayload | null;
+    loading: boolean;
+    authUser: () => Promise<void>;
+    setCurrentUser: (user: JwtPayload | null) => void;
+};
 
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthContext = createContext<AuthContextType | null>(null);
+const publicPaths = ['/', '/contact', '/login', '/signup'];
 
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    const [user, setUser] = useState<JwtPayload | null>(null);
+    const [loading, setLoading] = useState(true); // Start with true
+    const pathname = usePathname();
 
-export const AuthProvider = ({ children }: AuthProviderProps): ReactElement => {
-    const [accessToken, setAccessToken] = useState<string | null>(null);
-    const [userId, setUserId] = useState<string | null>(null);
+    const isPublicPath = publicPaths.includes(pathname);
 
+    const setCurrentUser = (user: JwtPayload | null) => {
+        setUser(user);
+    };
 
-
-
-    useEffect(() => {
-
-        const token = localStorage.getItem('accessToken');
-        const id = localStorage.getItem('userId');
-        if (token && id) {
-            setAccessToken(token);
-            setUserId(id);
-        }
-    }, []);
-
-    const setAuth = (token: string, userId: string) => {
-
-        if (!token || !userId) {
-            console.error('Token or ID is missing');
+    const authUser = useCallback(async () => {
+        if (isPublicPath) {
+            setLoading(false); // Don't trigger loader for public pages
             return;
         }
 
-        localStorage.setItem('accessToken', token);
-        localStorage.setItem('userId', userId.toString());
-        setAccessToken(token);
-        setUserId(userId);
-    };
+        try {
+            const user = await authenticateUser();
+            setUser(user);
+        } catch (error: any) {
+            setUser(null);
+        } finally {
+            setLoading(false);
+        }
+    }, [isPublicPath]);
 
-    const clearAuth = () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('userId');
-        setAccessToken(null);
-        setUserId(null);
-    };
+    useEffect(() => {
+        authUser();
+    }, [authUser]);
 
     return (
-        <AuthContext.Provider value={{ accessToken, userId, setAuth, clearAuth }
-        }>
-            {children}
+        <AuthContext.Provider value={{ user, loading, authUser, setCurrentUser }}>
+            {/* Only show loader if private route */}
+            {loading && !isPublicPath ? <Loader /> : children}
         </AuthContext.Provider>
     );
 };
 
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+};

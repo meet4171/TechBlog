@@ -1,4 +1,5 @@
 import { LoginEmailSchema, LoginSchema, SignupEmailSchema, SignUpSchema } from '@/lib/zod/auth';
+import { User } from '@/types/data';
 import { ReactNode } from 'react';
 import * as z from 'zod';
 
@@ -14,12 +15,12 @@ export type SignupFormData = VerifySignupEmail & Partial<SignupData>;
 export type LoginFormData = VerifyLoginEmail & Partial<LoginData>;
 
 export type AuthContextType = {
-    accessToken: string | null;
-    userId: string | null;
-    setAuth: (accessToken: string, userId: string) => void;
-    clearAuth: () => void;
+    user: User | null;
+    initialCheckComplete: boolean;
+    setUser: (user: User | null) => void;
+    loadUser: () => Promise<void>;
+    logout: () => Promise<void>;
 };
-
 export type AuthProviderProps = {
     children: ReactNode;
 };

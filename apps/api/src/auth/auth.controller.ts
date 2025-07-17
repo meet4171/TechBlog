@@ -10,6 +10,7 @@ import { ROLES } from 'src/enum/Roles.enum'
 import { VerifySignupDto } from 'src/auth/dto/verify-singup.dto';
 import { userLoginDto } from 'src/auth/dto/user-login.dto';
 import { GoogleOauthGuard } from 'src/auth/guard/GooleAuthGuard.guard';
+import { User } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -18,6 +19,11 @@ export class AuthController {
   ) { }
 
 
+  @Get('me')
+  async currentUser(@Req() req: ExpressRequest): Promise<GenerateJwtPayload> {
+    if (!req.user) throw new NotFoundException("User not found");
+    return await this.authService.sendCurrentUser(req.user)
+  }
 
   @Public()
   @Post('login')
@@ -109,7 +115,6 @@ export class AuthController {
   @Post('signout')
   signOut(@Req() req: ExpressRequest, @Res({ passthrough: true }) res: ExpressResponse) {
     const user = req.user;
-    console.log(user)
     if (!user?.id) throw new NotFoundException('No user to logout');
     const userId = Number(user.id);
     return this.authService.signOut(userId, res);

@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, User, PenTool, Home, LogIn, UserPlus, Edit } from 'lucide-react';
+import { Menu, X, User, PenTool, Home, LogIn, UserPlus, Edit, UserPen, HeadsetIcon } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function Navigation() {
 
-  const { accessToken } = useAuth();
+  const { user } = useAuth();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -35,8 +36,8 @@ export default function Navigation() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <PenTool className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-              <span className="text-xl font-bold text-foreground">BlogSpace</span>
+              <PenTool className="h-8 w-8 text-logo-color" />
+              <span className="text-xl font-bold text-logo-color">BlogSpace</span>
             </Link>
           </div>
 
@@ -44,38 +45,41 @@ export default function Navigation() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {[
-                { href: '/', label: 'Home', icon: Home },
-                { href: '/create-post', label: 'Write', icon: Edit },
-                { href: '/profile', label: 'Profile', icon: User },
-              ].map(({ href, label, icon: Icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                >
-                  <Icon className="inline h-4 w-4 mr-1" />
-                  {label}
-                </Link>
-              ))}
-              {!accessToken && isMounted && (
-                <Link
-                  href="/login"
-                  className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                >
-                  <LogIn className="inline h-4 w-4 mr-1" />
-                  Login
-                </Link>
-              )}
+                { href: '/', label: 'Home', icon: Home, auth: true },
+                { href: '/create-post', label: 'Write', icon: Edit, auth: true },
+                { href: '/profile', label: 'Profile', icon: UserPen, auth: true },
+                { href: '/about', label: 'About', icon: User, auth: false },
+                { href: '/contact', label: 'Contact', icon: HeadsetIcon, auth: false },
 
+              ]
+                .filter(({ auth }) => (user ? auth : !auth))
+                .map(({ href, label, icon: Icon }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  >
+                    <Icon className="inline h-4 w-4 mr-1" />
+                    {label}
+                  </Link>
+                ))}
+              {!user && <Link
+                href="/login"
+                className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+              >
+                <LogIn className="inline h-4 w-4 mr-1" />
+                Login
+              </Link>
+              }
               <Link
-                href={accessToken && isMounted ? '/signout' : '/signup'}
-                className={`text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${accessToken
+                href={user && isMounted ? '/signout' : '/signup'}
+                className={`text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${user
                   ? 'bg-btn-red hover:bg-btn-red-hover'
                   : 'bg-btn-blue hover:bg-btn-blue-hover'
                   }`}>
 
-                {!accessToken && isMounted && <UserPlus className="inline h-4 w-4 mr-1" />}
-                {accessToken && isMounted ? 'Sign Out' : 'Sign Up'}
+                {!user && isMounted && <UserPlus className="inline h-4 w-4 mr-1" />}
+                {user && isMounted ? 'Sign Out' : 'Sign Up'}
               </Link>
 
               <div className="flex items-center ml-4">
@@ -101,21 +105,25 @@ export default function Navigation() {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background border-t border-border">
               {[
-                { href: '/', label: 'Home', icon: Home },
-                { href: '/create-post', label: 'Write', icon: Edit },
-                { href: '/profile', label: 'Profile', icon: User },
-                { href: '/login', label: 'Login', icon: LogIn }
-              ].map(({ href, label, icon: Icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={toggleMenu}
-                  className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
-                >
-                  <Icon className="inline h-4 w-4 mr-2" />
-                  {label}
-                </Link>
-              ))}
+                { href: '/', label: 'Home', icon: Home, auth: true },
+                { href: '/create-post', label: 'Write', icon: Edit, auth: true },
+                { href: '/profile', label: 'Profile', icon: UserPen, auth: true },
+                { href: '/about', label: 'About', icon: User, auth: false },
+                { href: '/contact', label: 'Contact', icon: HeadsetIcon, auth: false },
+
+              ]
+                .filter(({ auth }) => (user ? auth : !auth))
+                .map(({ href, label, icon: Icon }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={toggleMenu}
+                    className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+                  >
+                    <Icon className="inline h-4 w-4 mr-2" />
+                    {label}
+                  </Link>
+                ))}
 
               <Link
                 href="/signup"

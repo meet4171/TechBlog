@@ -9,6 +9,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        pop: ['var(--font-poppins)', 'sans-serif'],
+        bungee: ['var(--font-bungee)', 'sans-serif']
+
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -27,7 +32,9 @@ const config: Config = {
         'stats': 'rgb(var(--stats)/<alpha-value>)',
         'stats-hover': 'rgb(var(--stats-hover)/<alpha-value>)',
         'gray-heading': 'rgb(var(--text-gray-heading)/<alpha-value>)',
+        'gray-subheading': 'rgb(var(--text-gray-subheading)/<alpha-value>)',
         'text-error': 'rgb(var(--text-error)/<alpha-value>)',
+        'logo-color': 'rgb(var(--text-logo)/<alpha-value>)',
 
         card: {
           DEFAULT: 'rgb(var(--card) / <alpha-value>)',
@@ -54,6 +61,8 @@ const config: Config = {
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       keyframes: {
+
+
         'accordion-down': {
           from: { height: '0' },
           to: { height: 'var(--radix-accordion-content-height)' },
@@ -74,8 +83,8 @@ const config: Config = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-
       },
+
     },
   },
   plugins: [require('tailwindcss-animate')],

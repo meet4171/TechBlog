@@ -2,16 +2,18 @@
 
 export default function AboutPage() {
     return (
-        <div className="min-h-screen bg-background text-foreground flex flex-col justify-center py-12 px-6 sm:px-12 lg:px-24">
+        <div className="min-h-screen bg-background  text-foreground flex flex-col justify-center py-12 px-6 sm:px-12 lg:px-24">
             <div className="max-w-5xl mx-auto w-full">
                 <div className="text-center mb-10">
-                    <h1 className="text-4xl font-bold">About BlogSpace</h1>
-                    <p className="mt-4 text-base text-muted-foreground">
+                    <h1 className="font-bungee tracking-widest font-light text-4xl text-gray-heading">
+                        About BlogSpace
+                    </h1>
+                    <p className="mt-4 text-base text-gray-subheading">
                         Discover our mission and the story behind BlogSpace.
                     </p>
                 </div>
 
-                <div className="space-y-8 text-sm sm:text-base leading-relaxed">
+                <div className="space-y-8 text-sm sm:text-base leading-relaxed text-muted-foreground">
                     <p>
                         <strong>BlogSpace</strong> is a modern blogging platform designed for creators, writers, and thinkers. Whether you&apos;re sharing your personal stories, tech tutorials, or creative ideas, BlogSpace gives you the tools to express yourself beautifully and reach a wider audience.
                     </p>
