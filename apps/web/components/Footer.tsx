@@ -5,7 +5,8 @@ import { PenTool, Twitter, Github, Linkedin, Mail } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function Footer() {
-  const { user } = useAuth();
+  // const { user } = useAuth();
+  const user = true;
 
   return (
     <footer className="bg-card text-foreground transition-colors duration-300">
@@ -19,7 +20,7 @@ export default function Footer() {
                 <PenTool className="h-8 w-8 text-blue-400 dark:text-blue-300" />
                 <span className="text-2xl font-bold text-logo-color">BlogSpace</span>
               </div>
-              <p className="text-gray-400 dark:text-gray-500 mb-4 max-w-md">
+              <p className="text-gray-subheading mb-4 max-w-md">
                 A modern platform for sharing ideas, stories, and insights. Join our community of passionate writers and readers.
               </p>
               <div className="flex space-x-4">
@@ -40,22 +41,22 @@ export default function Footer() {
 
             {/* Quick Links */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+              <h3 className="text-lg font-semibold mb-4 text-gray-heading">Quick Links</h3>
               <ul className="space-y-2">
-                <li><Link href="/" className="footer-link">Home</Link></li>
-                <li><Link href="/about" className="footer-link">About</Link></li>
-                <li><Link href="/contact" className="footer-link">Contact</Link></li>
-                <li><Link href="/terms-privacy-policy" className="footer-link">Privacy Policy</Link></li>
+                <li><Link href="/" className="footer-link text-gray-subheading">Home</Link></li>
+                <li><Link href="/about" className="footer-link text-gray-subheading">About</Link></li>
+                <li><Link href="/contact" className="footer-link text-gray-subheading">Contact</Link></li>
+                <li><Link href="/terms-privacy-policy" className="footer-link text-gray-subheading">Privacy Policy</Link></li>
               </ul>
             </div>
 
             {/* Account */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Account</h3>
+              <h3 className="text-lg font-semibold mb-4 text-gray-heading">Account</h3>
               <ul className="space-y-2">
-                <li><Link href="/login" className="footer-link">Login</Link></li>
-                <li><Link href="/signup" className="footer-link">Sign Up</Link></li>
-                <li><Link href="/profile" className="footer-link">Profile</Link></li>
+                <li><Link href="/login" className="footer-link text-gray-subheading">Login</Link></li>
+                <li><Link href="/signup" className="footer-link text-gray-subheading">Sign Up</Link></li>
+                <li><Link href="/profile" className="footer-link text-gray-subheading">Profile</Link></li>
               </ul>
             </div>
           </div>
@@ -81,11 +82,11 @@ export default function Footer() {
 
             {/* Guest Links */}
             <div className="md:text-right">
-              <h3 className="text-lg font-semibold mb-4">Explore</h3>
+              <h3 className="text-lg font-semibold mb-4 text-gray-heading">Explore</h3>
               <ul className="space-y-2">
-                <li><Link href="/about" className="footer-link">About</Link></li>
-                <li><Link href="/contact" className="footer-link">Contact</Link></li>
-                <li><Link href="/terms-privacy-policy" className="footer-link">Privacy Policy</Link></li>
+                <li><Link href="/about" className="footer-link text-gray-subheading">About</Link></li>
+                <li><Link href="/contact" className="footer-link text-gray-subheading">Contact</Link></li>
+                <li><Link href="/terms-privacy-policy" className="footer-link text-gray-subheading">Privacy Policy</Link></li>
               </ul>
             </div>
           </div>

@@ -70,6 +70,26 @@ export class AuthService {
 
 
     }
+    async signupPassword(body: User, res: Response): Promise<GenerateJwtPayload> {
+        const user = await this.validateUser(body?.email);
+        if (user) throw new InternalServerErrorException('User Already Exists');
+
+        if (!body.password) throw new InternalServerErrorException('Try to signup again refreshing the page');
+        const hashPass = hashTokenGenerator(body.password);
+
+        const userCreated = await this.prisma.user.create({ data: body });
+        if (!userCreated) throw new InternalServerErrorException('User Not Created');
+
+        const payload = payloadExtractor(body);
+        const tokens = await this.responseTokenGenerator(payload);
+
+        res.cookie('refresh_token', tokens.refresh_token, this.getCookieOptionsRefreshToken());
+        res.cookie('access_token', tokens.access_token, this.getCookieOptionsAccessToken());
+
+        return payload;
+
+
+    }
 
     async signOut(userId: number, res: Response) {
         const NODE_ENV = this.configService.get<string>('NODE_ENV');

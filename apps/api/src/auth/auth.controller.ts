@@ -1,5 +1,4 @@
 import { Body, Controller, Get, InternalServerErrorException, NotFoundException, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { Request as ExpressRequest } from 'express';
 import { Response as ExpressResponse } from 'express';
 import { AuthService } from 'src/auth/auth.service';
@@ -48,6 +47,19 @@ export class AuthController {
     return await this.authService.signup(body.email);
 
   }
+
+  @Public()
+  @Post('signup-password')
+  async signupPassword(
+    @Body() body: User,
+    @Res({ passthrough: true }) res: ExpressResponse
+
+  ): Promise<GenerateJwtPayload> {
+    if (!body.agreeToTerms) throw new InternalServerErrorException('Agree terms and conditions to go further')
+    return await this.authService.signupPassword(body, res);
+
+  }
+
 
   @Public()
   @Post('login/resend-otp')
@@ -103,14 +115,6 @@ export class AuthController {
     console.log('admin route')
   }
 
-  @Public()
-  @UseGuards(GoogleOauthGuard)
-  @Get('google')
-  async auth(@Req() req: ExpressRequest, @Res() res: ExpressResponse): Promise<void> {
-    const google_token = req.cookies?.google_token;
-    const is_valid_token = await this.authService.validateGoogleToken(google_token);
-    if (is_valid_token) return res.redirect('/');
-  }
 
   @Post('signout')
   signOut(@Req() req: ExpressRequest, @Res({ passthrough: true }) res: ExpressResponse) {
@@ -121,6 +125,13 @@ export class AuthController {
 
   }
 
+
+  @Public()
+  @UseGuards(GoogleOauthGuard)
+  @Get('google')
+  async auth(): Promise<void> { }
+
+
   @Public()
   @UseGuards(GoogleOauthGuard)
   @Get('google/redirect')
@@ -130,9 +141,7 @@ export class AuthController {
     console.log('User from Google:', user);
 
 
-    return res.json({ message: 'Login successful', user });
+    // return res.json({ message: 'Login successful', user });
   }
-
-
 
 }

@@ -1,7 +1,7 @@
-import { LoginData, SignupData, VerifyLoginEmail, VerifySignupEmail } from "@/types/auth";
+import { LoginData, SendOtp, SignupData, VerifyLoginEmail, } from "@/types/auth";
 
 
-export const singupApi = async (data: VerifySignupEmail) => {
+export const singupApi = async (data: SendOtp) => {
     try {
         const response = await fetch('http://localhost:8080/auth/signup', {
             method: 'POST',

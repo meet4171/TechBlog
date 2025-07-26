@@ -69,6 +69,7 @@
     "@headlessui/react": "^2.2.4",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.0",
+    "next-auth": "^4.24.11",
     "react-countup": "^6.5.3",
     "react-intersection-observer": "^9.16.0",
     "react-toastify": "^11.0.5",

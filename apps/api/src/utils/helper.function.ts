@@ -7,7 +7,7 @@ export function payloadExtractor(user: User): GenerateJwtPayload {
     return payload;
 }
 
-export async function hashTokenGenerator(token: string): Promise<string> {
+export async function hashTokenGenerator(token:string): Promise<string> {
     try {
         return await argon2.hash(token);
     } catch (err) {

@@ -21,6 +21,7 @@ model User {
   Like         Like[]
   posts        Post[]
   role         Role      @default(USER)
+  password     String?
 }
 
 model Post {

@@ -25,6 +25,8 @@ export class CreateUserDto {
     @IsBoolean()
     agreeToTerms: boolean;
 
+    @IsOptional()
+    passwrod: string
 }
 
 
